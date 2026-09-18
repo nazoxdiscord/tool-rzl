@@ -1,0 +1,2632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TOOL-RZL • Outils en ligne</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+:root{
+  --bg:#050509;
+  --bg2:#090912;
+  --card:rgba(13,13,23,.88);
+  --purple:#9b4dff;
+  --purple2:#6d28d9;
+  --green:#00ff9d;
+  --cyan:#00e5ff;
+  --text:#f5f5fa;
+  --muted:#9999aa;
+  --danger:#ff4d6d;
+  --border:rgba(155,77,255,.24);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:
+    radial-gradient(circle at top left,rgba(109,40,217,.12),transparent 35%),
+    radial-gradient(circle at bottom right,rgba(0,229,255,.06),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+#matrix{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  opacity:.11;
+}
+
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(
+    rgba(255,255,255,.015) 50%,
+    transparent 50%
+  );
+  background-size:100% 4px;
+  z-index:10;
+  opacity:.25;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:blur(18px);
+  background:rgba(5,5,9,.78);
+  border-bottom:1px solid var(--border);
+}
+
+.nav{
+  max-width:1200px;
+  margin:auto;
+  min-height:70px;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:1px;
+  color:white;
+  text-decoration:none;
+}
+
+.logo span{
+  color:var(--purple);
+}
+
+.nav-links{
+  display:flex;
+  gap:24px;
+}
+
+.nav-links a{
+  color:var(--muted);
+  text-decoration:none;
+  font-weight:700;
+  transition:.2s;
+}
+
+.nav-links a:hover{
+  color:white;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+  max-width:1200px;
+  margin:auto;
+  padding:90px 20px 50px;
+  text-align:center;
+}
+
+.status{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(0,255,157,.25);
+  background:rgba(0,255,157,.05);
+  color:var(--green);
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.7px;
+}
+
+.status:before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 12px var(--green);
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{
+    opacity:1;
+    transform:scale(1);
+  }
+  50%{
+    opacity:.45;
+    transform:scale(.7);
+  }
+}
+
+/* =========================
+   TITRE ANIMÉ
+========================= */
+
+.title-zone{
+  position:relative;
+  display:inline-block;
+  margin-top:25px;
+  padding:0 65px;
+}
+
+.hero h1{
+  margin:0;
+  font-size:clamp(50px,9vw,105px);
+  line-height:.95;
+  font-weight:1000;
+  letter-spacing:-5px;
+  min-height:1em;
+  background:linear-gradient(
+    90deg,
+    #fff,
+    var(--purple),
+    #fff
+  );
+  -webkit-background-clip:text;
+  color:transparent;
+  text-shadow:0 0 35px rgba(155,77,255,.15);
+}
+
+/* Curseur style clavier */
+
+.typing-cursor{
+  display:inline-block;
+  width:4px;
+  height:.85em;
+  margin-left:7px;
+  vertical-align:-.08em;
+  background:var(--purple);
+  box-shadow:0 0 12px var(--purple);
+  animation:cursorBlink .7s infinite;
+}
+
+@keyframes cursorBlink{
+  0%,45%{opacity:1}
+  46%,100%{opacity:0}
+}
+
+/* =========================
+   EMOJIS ANIMÉS
+========================= */
+
+.floating-emoji{
+  position:absolute;
+  font-size:30px;
+  pointer-events:none;
+  filter:drop-shadow(0 0 10px rgba(155,77,255,.35));
+  animation:floatEmoji 3s ease-in-out infinite;
+}
+
+.emoji1{
+  left:0;
+  top:5px;
+  animation-delay:0s;
+}
+
+.emoji2{
+  right:0;
+  top:20px;
+  animation-delay:.7s;
+}
+
+.emoji3{
+  left:20px;
+  bottom:-20px;
+  animation-delay:1.3s;
+}
+
+.emoji4{
+  right:20px;
+  bottom:-20px;
+  animation-delay:1.9s;
+}
+
+@keyframes floatEmoji{
+  0%,100%{
+    transform:translateY(0) rotate(-8deg) scale(1);
+  }
+  50%{
+    transform:translateY(-13px) rotate(8deg) scale(1.12);
+  }
+}
+
+.hero p{
+  max-width:720px;
+  margin:28px auto 0;
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.7;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+  max-width:900px;
+  margin:45px auto 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.stat{
+  background:rgba(13,13,23,.72);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:20px;
+  backdrop-filter:blur(10px);
+}
+
+.stat strong{
+  display:block;
+  font-size:28px;
+  color:white;
+}
+
+.stat span{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+  max-width:1200px;
+  margin:auto;
+  padding:40px 20px 100px;
+}
+
+.section-title{
+  margin-bottom:24px;
+}
+
+.section-title h2{
+  font-size:32px;
+}
+
+.section-title p{
+  margin-top:8px;
+  color:var(--muted);
+}
+
+/* =========================
+   OUTILS
+========================= */
+
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.tool{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:24px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 15px 50px rgba(0,0,0,.25);
+  transition:.25s;
+}
+
+.tool:hover{
+  transform:translateY(-3px);
+  border-color:rgba(155,77,255,.55);
+}
+
+.tool-head{
+  display:flex;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.tool-icon{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:rgba(155,77,255,.12);
+  border:1px solid rgba(155,77,255,.25);
+  font-size:23px;
+}
+
+.tool h3{
+  font-size:20px;
+}
+
+.tool-head p{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+/* =========================
+   BOUTON CHOISIR UN FICHIER
+========================= */
+
+/* On garde l'apparence classique du bouton fichier */
+
+input[type=file]{
+  width:100%;
+  margin-top:12px;
+  padding:0;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:14px;
+}
+
+input[type=file]::file-selector-button{
+  margin-right:12px;
+  padding:11px 16px;
+  border-radius:10px;
+  border:1px solid rgba(155,77,255,.4);
+  background:#10101a;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
+input[type=file]::file-selector-button:hover{
+  background:rgba(155,77,255,.15);
+  border-color:var(--purple);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input[type=text],
+select{
+  width:100%;
+  margin-top:12px;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#08080f;
+  color:white;
+  outline:none;
+}
+
+input:focus,
+select:focus{
+  border-color:var(--purple);
+}
+
+button{
+  margin-top:12px;
+  padding:12px 16px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(
+    135deg,
+    var(--purple),
+    var(--purple2)
+  );
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.1);
+}
+
+button.secondary{
+  background:#10101a;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+button.danger{
+  background:rgba(255,77,109,.12);
+  border:1px solid rgba(255,77,109,.25);
+  color:#ff7d96;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  align-items:center;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.actions button{
+  flex:1;
+}
+
+/* =========================
+   DROP ZONE
+========================= */
+
+.dropzone{
+  margin-top:12px;
+  padding:25px 15px;
+  border:1px dashed rgba(155,77,255,.4);
+  border-radius:15px;
+  text-align:center;
+  color:var(--muted);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.dropzone:hover,
+.dropzone.drag{
+  border-color:var(--purple);
+  background:rgba(155,77,255,.06);
+  color:white;
+}
+
+.dropzone strong{
+  display:block;
+  color:white;
+  margin-bottom:5px;
+}
+
+/* =========================
+   RESULTATS
+========================= */
+
+.result{
+  margin-top:15px;
+  padding:14px;
+  border-radius:14px;
+  background:#08080f;
+  border:1px solid rgba(255,255,255,.08);
+  display:none;
+}
+
+.result.show{
+  display:block;
+}
+
+.result img{
+  max-width:100%;
+  max-height:350px;
+  display:block;
+  margin:auto;
+  border-radius:10px;
+}
+
+.result video{
+  width:100%;
+  max-height:350px;
+  border-radius:10px;
+}
+
+.result audio{
+  width:100%;
+}
+
+.download{
+  display:inline-block;
+  margin-top:12px;
+  padding:11px 14px;
+  border-radius:10px;
+  background:rgba(0,255,157,.1);
+  border:1px solid rgba(0,255,157,.25);
+  color:var(--green);
+  text-decoration:none;
+  font-weight:800;
+}
+
+/* =========================
+   INFORMATIONS
+========================= */
+
+.info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.info div{
+  padding:10px;
+  border-radius:10px;
+  background:#090910;
+}
+
+.info small{
+  color:var(--muted);
+  display:block;
+  margin-bottom:3px;
+}
+
+.info strong{
+  word-break:break-word;
+}
+
+/* =========================
+   QR CODE
+========================= */
+
+#qrcode{
+  margin:15px auto;
+  width:max-content;
+  padding:12px;
+  background:white;
+  border-radius:10px;
+}
+
+/* =========================
+   APERCU
+========================= */
+
+.preview-frame{
+  width:100%;
+  min-height:300px;
+  border:none;
+  border-radius:12px;
+  background:white;
+}
+
+/* =========================
+   A PROPOS
+========================= */
+
+.about-box{
+  margin-top:35px;
+  padding:30px;
+  border-radius:22px;
+  background:linear-gradient(
+    135deg,
+    rgba(155,77,255,.08),
+    rgba(0,229,255,.03)
+  );
+  border:1px solid var(--border);
+}
+
+.about-box h2{
+  font-size:32px;
+  margin-bottom:14px;
+}
+
+.about-box p{
+  max-width:850px;
+  color:#b5b5c5;
+  line-height:1.8;
+  font-size:15px;
+}
+
+.about-highlight{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.about-item{
+  padding:16px;
+  border-radius:14px;
+  background:rgba(5,5,9,.5);
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.about-item strong{
+  display:block;
+  margin-bottom:5px;
+}
+
+.about-item span{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+  border-top:1px solid var(--border);
+  padding:35px 20px;
+  background:rgba(5,5,9,.8);
+}
+
+.footer-inner{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.footer-logo{
+  font-weight:900;
+  font-size:18px;
+}
+
+.footer-logo span{
+  color:var(--purple);
+}
+
+footer p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:6px;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:50;
+  padding:14px 18px;
+  border-radius:14px;
+  background:#10101a;
+  border:1px solid var(--border);
+  box-shadow:0 10px 35px rgba(0,0,0,.4);
+  transform:translateY(100px);
+  opacity:0;
+  transition:.3s;
+  font-weight:700;
+}
+
+.toast.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:800px){
+
+  .tools-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .about-highlight{
+    grid-template-columns:1fr;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .nav-links{
+    gap:12px;
+  }
+
+  .hero{
+    padding-top:65px;
+  }
+
+  .hero h1{
+    letter-spacing:-3px;
+  }
+
+  .title-zone{
+    padding:0 45px;
+  }
+
+  .floating-emoji{
+    font-size:24px;
+  }
+}
+
+@media(max-width:500px){
+
+  .nav{
+    min-height:60px;
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  .nav-links a{
+    font-size:13px;
+  }
+
+  .hero p{
+    font-size:15px;
+  }
+
+  .row,
+  .info{
+    grid-template-columns:1fr;
+  }
+
+  .title-zone{
+    padding:0 35px;
+  }
+
+  .hero h1{
+    font-size:52px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+  <nav class="nav">
+
+    <a href="#" class="logo">
+      💻 TOOL-<span>RZL</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#outils">Outils</a>
+      <a href="#apropos">À propos</a>
+    </div>
+
+  </nav>
+
+</header>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+  <div class="status">
+    SYSTÈME EN LIGNE • TOOL-RZL
+  </div>
+
+  <div class="title-zone">
+
+    <span class="floating-emoji emoji1">⚡</span>
+    <span class="floating-emoji emoji2">💻</span>
+    <span class="floating-emoji emoji3">🛠️</span>
+    <span class="floating-emoji emoji4">🚀</span>
+
+    <h1>
+      <span id="typingTitle"></span>
+      <span class="typing-cursor"></span>
+    </h1>
+
+  </div>
+
+  <p>
+    Tes outils numériques réunis au même endroit.
+    Convertis, compresse, génère et analyse tes fichiers
+    directement depuis ton navigateur.
+  </p>
+
+  <div class="stats">
+
+    <div class="stat">
+      <strong>9+</strong>
+      <span>Outils disponibles</span>
+    </div>
+
+    <div class="stat">
+      <strong>⚡</strong>
+      <span>Traitement rapide</span>
+    </div>
+
+    <div class="stat">
+      <strong>💻</strong>
+      <span>Directement dans le navigateur</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     OUTILS
+========================= -->
+
+<main id="outils">
+
+  <div class="section-title">
+
+    <h2>🛠️ Outils</h2>
+
+    <p>
+      Tous tes outils essentiels, accessibles gratuitement.
+    </p>
+
+  </div>
+
+
+  <div class="tools-grid">
+
+
+    <!-- IMAGE -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">🖼️</div>
+
+        <div>
+          <h3>Convertisseur d'image</h3>
+
+          <p>
+            Convertis tes images dans le format de ton choix.
+          </p>
+        </div>
+
+      </div>
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*,.heic,.heif"
+      >
+
+      <select id="imageFormat">
+
+        <option value="png">PNG</option>
+        <option value="jpeg">JPG</option>
+        <option value="webp">WEBP</option>
+        <option value="avif">AVIF</option>
+        <option value="pdf">PDF</option>
+
+      </select>
+
+      <div class="actions">
+
+        <button onclick="convertImage()">
+          Convertir
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetTool('imageInput','imageResult')"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="imageResult">
+      </div>
+
+    </div>
+
+
+    <!-- COMPRESSEUR -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">🗜️</div>
+
+        <div>
+
+          <h3>Compresseur d'image</h3>
+
+          <p>
+            Réduis le poids de tes images.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="file"
+        id="compressInput"
+        accept="image/*"
+      >
+
+      <div class="row">
+
+        <input
+          type="range"
+          id="quality"
+          min="0.1"
+          max="1"
+          value="0.7"
+          step="0.1"
+        >
+
+        <span id="qualityValue">
+          Qualité : 70%
+        </span>
+
+      </div>
+
+      <div class="actions">
+
+        <button onclick="compressImage()">
+          Compresser
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetTool('compressInput','compressResult')"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="compressResult">
+      </div>
+
+    </div>
+
+
+    <!-- AUDIO -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">🎵</div>
+
+        <div>
+
+          <h3>Convertisseur audio</h3>
+
+          <p>
+            Convertis tes fichiers audio.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="file"
+        id="audioInput"
+        accept="audio/*"
+      >
+
+      <select id="audioFormat">
+
+        <option value="mp3">MP3</option>
+        <option value="wav">WAV</option>
+        <option value="flac">FLAC</option>
+        <option value="ogg">OGG</option>
+        <option value="opus">OPUS</option>
+        <option value="aac">AAC</option>
+        <option value="m4a">M4A</option>
+        <option value="aiff">AIFF</option>
+
+      </select>
+
+      <div class="actions">
+
+        <button onclick="convertAudio()">
+          Convertir
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetTool('audioInput','audioResult')"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="audioResult">
+      </div>
+
+    </div>
+
+
+    <!-- VIDEO -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">🎬</div>
+
+        <div>
+
+          <h3>Convertisseur vidéo</h3>
+
+          <p>
+            Convertis tes vidéos dans différents formats.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="file"
+        id="videoInput"
+        accept="video/*"
+      >
+
+      <select id="videoFormat">
+
+        <option value="mp4">MP4</option>
+        <option value="webm">WEBM</option>
+        <option value="mkv">MKV</option>
+        <option value="mov">MOV</option>
+        <option value="avi">AVI</option>
+        <option value="gif">GIF</option>
+
+      </select>
+
+      <div class="actions">
+
+        <button onclick="convertVideo()">
+          Convertir
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetTool('videoInput','videoResult')"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="videoResult">
+      </div>
+
+    </div>
+
+
+    <!-- URL -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">🔗</div>
+
+        <div>
+
+          <h3>URL → Fichier</h3>
+
+          <p>
+            Récupère un fichier depuis une adresse internet.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="text"
+        id="urlInput"
+        placeholder="https://exemple.com/fichier.jpg"
+      >
+
+      <div class="actions">
+
+        <button onclick="urlToFile()">
+          Télécharger
+        </button>
+
+        <button
+          class="danger"
+          onclick="document.getElementById('urlInput').value=''"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="urlResult">
+      </div>
+
+    </div>
+
+
+    <!-- QR -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">📱</div>
+
+        <div>
+
+          <h3>Générateur QR Code</h3>
+
+          <p>
+            Crée un QR code à partir d'un texte ou d'un lien.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="text"
+        id="qrInput"
+        placeholder="Texte ou lien"
+      >
+
+      <div class="actions">
+
+        <button onclick="generateQR()">
+          Générer
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetQR()"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="qrResult"
+      >
+
+        <div id="qrcode"></div>
+
+      </div>
+
+    </div>
+
+
+    <!-- INFORMATIONS -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">📊</div>
+
+        <div>
+
+          <h3>Informations fichier</h3>
+
+          <p>
+            Consulte les informations de ton fichier.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="file"
+        id="infoInput"
+      >
+
+      <div class="actions">
+
+        <button onclick="fileInfo()">
+          Analyser
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetTool('infoInput','infoResult')"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="infoResult">
+      </div>
+
+    </div>
+
+
+    <!-- APERCU -->
+
+    <div class="tool">
+
+      <div class="tool-head">
+
+        <div class="tool-icon">👁️</div>
+
+        <div>
+
+          <h3>Aperçu de fichier</h3>
+
+          <p>
+            Visualise tes images, vidéos, sons et PDF.
+          </p>
+
+        </div>
+
+      </div>
+
+      <input
+        type="file"
+        id="previewInput"
+        accept="image/*,video/*,audio/*,application/pdf"
+      >
+
+      <div class="actions">
+
+        <button onclick="previewFile()">
+          Aperçu
+        </button>
+
+        <button
+          class="danger"
+          onclick="resetTool('previewInput','previewResult')"
+        >
+          Supprimer
+        </button>
+
+      </div>
+
+      <div
+        class="result"
+        id="previewResult">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       A PROPOS
+  ========================= -->
+
+  <section id="apropos">
+
+    <div class="about-box">
+
+      <h2>À propos de TOOL-RZL</h2>
+
+      <p>
+        TOOL-RZL est une plateforme d'outils numériques pensée pour
+        simplifier la gestion de tes fichiers. Convertis une image,
+        compresse un fichier, transforme une vidéo ou un audio,
+        génère un QR code et consulte rapidement les informations
+        d'un fichier, le tout depuis une seule interface.
+      </p>
+
+      <p style="margin-top:12px">
+        L'objectif est simple : proposer des outils rapides,
+        accessibles et faciles à utiliser, sans multiplier les
+        sites ou les logiciels.
+      </p>
+
+
+      <div class="about-highlight">
+
+        <div class="about-item">
+          <strong>⚡ Rapide</strong>
+          <span>
+            Des outils conçus pour effectuer les opérations
+            courantes simplement.
+          </span>
+        </div>
+
+        <div class="about-item">
+          <strong>🔒 Simple</strong>
+          <span>
+            Une interface claire avec les fonctions essentielles
+            directement accessibles.
+          </span>
+        </div>
+
+        <div class="about-item">
+          <strong>💻 Moderne</strong>
+          <span>
+            Une expérience adaptée aux ordinateurs, tablettes
+            et téléphones.
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+  <div class="footer-inner">
+
+    <div>
+
+      <div class="footer-logo">
+        💻 TOOL-<span>RZL</span>
+      </div>
+
+      <p>
+        Outils de conversion, compression et gestion de fichiers.
+      </p>
+
+    </div>
+
+    <p>
+      TOOL-RZL • Simple • Rapide • Moderne
+    </p>
+
+  </div>
+
+</footer>
+
+
+<div
+  class="toast"
+  id="toast">
+</div>
+
+
+<script>
+
+/* =========================
+   TITRE QUI S'ECRIT
+========================= */
+
+const titleText = "TOOL-RZL";
+const titleElement = document.getElementById("typingTitle");
+
+let titleIndex = 0;
+
+function typeTitle(){
+
+  if(titleIndex < titleText.length){
+
+    titleElement.textContent += titleText.charAt(titleIndex);
+
+    titleIndex++;
+
+    setTimeout(typeTitle,110);
+
+  }
+
+}
+
+setTimeout(typeTitle,500);
+
+
+/* =========================
+   MATRIX
+========================= */
+
+const canvas =
+  document.getElementById("matrix");
+
+const ctx =
+  canvas.getContext("2d");
+
+function resizeMatrix(){
+
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+
+}
+
+resizeMatrix();
+
+window.addEventListener(
+  "resize",
+  resizeMatrix
+);
+
+const chars =
+"01ABCDEFGHIJKLMNOPQRSTUVWXYZ<>[]{}#$%&*+";
+
+let fontSize=14;
+
+let columns=
+Math.floor(window.innerWidth/fontSize);
+
+let drops=
+Array(columns).fill(1);
+
+function drawMatrix(){
+
+  ctx.fillStyle=
+  "rgba(5,5,9,.08)";
+
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  ctx.font=
+  fontSize+"px monospace";
+
+  for(
+    let i=0;
+    i<drops.length;
+    i++
+  ){
+
+    const text=
+      chars[
+        Math.floor(
+          Math.random()*chars.length
+        )
+      ];
+
+    ctx.fillStyle=
+      Math.random()>.92
+      ? "#ffffff"
+      : "#00ff9d";
+
+    ctx.fillText(
+      text,
+      i*fontSize,
+      drops[i]*fontSize
+    );
+
+    if(
+      drops[i]*fontSize>canvas.height &&
+      Math.random()>.975
+    ){
+
+      drops[i]=0;
+
+    }
+
+    drops[i]++;
+
+  }
+
+}
+
+setInterval(
+  drawMatrix,
+  50
+);
+
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(message){
+
+  const el=
+    document.getElementById("toast");
+
+  el.textContent=message;
+
+  el.classList.add("show");
+
+  setTimeout(
+    ()=>{
+      el.classList.remove("show");
+    },
+    2800
+  );
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetTool(
+  inputId,
+  resultId
+){
+
+  const input=
+    document.getElementById(inputId);
+
+  const result=
+    document.getElementById(resultId);
+
+  if(input){
+
+    input.value="";
+
+  }
+
+  if(result){
+
+    result.innerHTML="";
+
+    result.classList.remove(
+      "show"
+    );
+
+  }
+
+  toast(
+    "Fichier supprimé."
+  );
+
+}
+
+
+/* =========================
+   CONVERTISSEUR IMAGE
+========================= */
+
+async function convertImage(){
+
+  const input=
+    document.getElementById(
+      "imageInput"
+    );
+
+  const format=
+    document.getElementById(
+      "imageFormat"
+    ).value;
+
+  const result=
+    document.getElementById(
+      "imageResult"
+    );
+
+  if(!input.files.length){
+
+    toast(
+      "Sélectionne une image."
+    );
+
+    return;
+
+  }
+
+  let file=
+    input.files[0];
+
+  try{
+
+    if(
+      file.name
+        .toLowerCase()
+        .endsWith(".heic") ||
+      file.name
+        .toLowerCase()
+        .endsWith(".heif")
+    ){
+
+      file=
+        await heic2any({
+          blob:file,
+          toType:"image/png"
+        });
+
+      if(Array.isArray(file)){
+
+        file=file[0];
+
+      }
+
+    }
+
+    const url=
+      URL.createObjectURL(file);
+
+    const img=
+      new Image();
+
+    img.onload=()=>{
+
+      const canvas=
+        document.createElement(
+          "canvas"
+        );
+
+      canvas.width=
+        img.width;
+
+      canvas.height=
+        img.height;
+
+      const c=
+        canvas.getContext("2d");
+
+      c.drawImage(
+        img,
+        0,
+        0
+      );
+
+      if(format==="pdf"){
+
+        const {
+          jsPDF
+        }=window.jspdf;
+
+        const pdf=
+          new jsPDF({
+            orientation:
+              img.width>img.height
+              ? "landscape"
+              : "portrait",
+            unit:"px",
+            format:[
+              img.width,
+              img.height
+            ]
+          });
+
+        pdf.addImage(
+          canvas.toDataURL(
+            "image/jpeg",
+            .95
+          ),
+          "JPEG",
+          0,
+          0,
+          img.width,
+          img.height
+        );
+
+        const blob=
+          pdf.output("blob");
+
+        const link=
+          URL.createObjectURL(blob);
+
+        result.innerHTML=`
+
+          <strong>
+            Conversion terminée.
+          </strong>
+
+          <br>
+
+          <a
+            class="download"
+            href="${link}"
+            download="${file.name.split('.')[0]}.pdf"
+          >
+            Télécharger le PDF
+          </a>
+
+        `;
+
+      }else{
+
+        const mime=
+          format==="jpeg"
+          ? "image/jpeg"
+          : "image/"+format;
+
+        canvas.toBlob(
+          blob=>{
+
+            const link=
+              URL.createObjectURL(
+                blob
+              );
+
+            result.innerHTML=`
+
+              <img src="${link}">
+
+              <a
+                class="download"
+                href="${link}"
+                download="${file.name.split('.')[0]}.${format}"
+              >
+                Télécharger
+              </a>
+
+            `;
+
+          },
+          mime,
+          .92
+        );
+
+      }
+
+      result.classList.add(
+        "show"
+      );
+
+    };
+
+    img.src=url;
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Impossible de convertir cette image."
+    );
+
+  }
+
+}
+
+
+/* =========================
+   COMPRESSEUR
+========================= */
+
+const quality=
+  document.getElementById(
+    "quality"
+  );
+
+const qualityValue=
+  document.getElementById(
+    "qualityValue"
+  );
+
+quality.addEventListener(
+  "input",
+  ()=>{
+    qualityValue.textContent=
+      "Qualité : "+
+      Math.round(
+        quality.value*100
+      )+
+      "%";
+  }
+);
+
+
+function compressImage(){
+
+  const input=
+    document.getElementById(
+      "compressInput"
+    );
+
+  const result=
+    document.getElementById(
+      "compressResult"
+    );
+
+  if(!input.files.length){
+
+    toast(
+      "Sélectionne une image."
+    );
+
+    return;
+
+  }
+
+  const file=
+    input.files[0];
+
+  const img=
+    new Image();
+
+  img.onload=()=>{
+
+    const canvas=
+      document.createElement(
+        "canvas"
+      );
+
+    canvas.width=
+      img.width;
+
+    canvas.height=
+      img.height;
+
+    const c=
+      canvas.getContext("2d");
+
+    c.drawImage(
+      img,
+      0,
+      0
+    );
+
+    canvas.toBlob(
+      blob=>{
+
+        const url=
+          URL.createObjectURL(
+            blob
+          );
+
+        result.innerHTML=`
+
+          <strong>
+            Compression terminée.
+          </strong>
+
+          <br>
+
+          Taille originale :
+          ${(file.size/1024/1024).toFixed(2)}
+          Mo
+
+          <br>
+
+          Nouvelle taille :
+          ${(blob.size/1024/1024).toFixed(2)}
+          Mo
+
+          <br>
+
+          <a
+            class="download"
+            href="${url}"
+            download="image-compressee.jpg"
+          >
+            Télécharger
+          </a>
+
+        `;
+
+        result.classList.add(
+          "show"
+        );
+
+      },
+      "image/jpeg",
+      Number(
+        quality.value
+      )
+    );
+
+  };
+
+  img.src=
+    URL.createObjectURL(
+      file
+    );
+
+}
+
+
+/* =========================
+   AUDIO
+========================= */
+
+async function convertAudio(){
+
+  const input=
+    document.getElementById(
+      "audioInput"
+    );
+
+  const format=
+    document.getElementById(
+      "audioFormat"
+    ).value;
+
+  const result=
+    document.getElementById(
+      "audioResult"
+    );
+
+  if(!input.files.length){
+
+    toast(
+      "Sélectionne un fichier audio."
+    );
+
+    return;
+
+  }
+
+  result.innerHTML=`
+
+    <strong>
+      Conversion en cours...
+    </strong>
+
+    <p
+      style="color:var(--muted);margin-top:8px"
+    >
+      Le traitement peut prendre quelques instants.
+    </p>
+
+  `;
+
+  result.classList.add(
+    "show"
+  );
+
+  try{
+
+    const {
+      createFFmpeg,
+      fetchFile
+    }=FFmpeg;
+
+    const ffmpeg=
+      createFFmpeg({
+        log:false
+      });
+
+    if(!ffmpeg.isLoaded()){
+
+      await ffmpeg.load();
+
+    }
+
+    const file=
+      input.files[0];
+
+    ffmpeg.FS(
+      "writeFile",
+      file.name,
+      await fetchFile(file)
+    );
+
+    const output=
+      "output."+format;
+
+    await ffmpeg.run(
+      "-i",
+      file.name,
+      output
+    );
+
+    const data=
+      ffmpeg.FS(
+        "readFile",
+        output
+      );
+
+    const blob=
+      new Blob(
+        [data.buffer],
+        {
+          type:"audio/"+format
+        }
+      );
+
+    const url=
+      URL.createObjectURL(
+        blob
+      );
+
+    result.innerHTML=`
+
+      <strong>
+        Conversion terminée.
+      </strong>
+
+      <br>
+
+      <a
+        class="download"
+        href="${url}"
+        download="${file.name.split('.')[0]}.${format}"
+      >
+        Télécharger
+      </a>
+
+    `;
+
+  }catch(error){
+
+    console.error(error);
+
+    result.innerHTML=`
+
+      <strong>
+        Erreur pendant la conversion.
+      </strong>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   VIDEO
+========================= */
+
+async function convertVideo(){
+
+  const input=
+    document.getElementById(
+      "videoInput"
+    );
+
+  const format=
+    document.getElementById(
+      "videoFormat"
+    ).value;
+
+  const result=
+    document.getElementById(
+      "videoResult"
+    );
+
+  if(!input.files.length){
+
+    toast(
+      "Sélectionne une vidéo."
+    );
+
+    return;
+
+  }
+
+  result.innerHTML=`
+
+    <strong>
+      Conversion en cours...
+    </strong>
+
+    <p
+      style="color:var(--muted);margin-top:8px"
+    >
+      Le traitement peut prendre quelques instants.
+    </p>
+
+  `;
+
+  result.classList.add(
+    "show"
+  );
+
+  try{
+
+    const {
+      createFFmpeg,
+      fetchFile
+    }=FFmpeg;
+
+    const ffmpeg=
+      createFFmpeg({
+        log:false
+      });
+
+    if(!ffmpeg.isLoaded()){
+
+      await ffmpeg.load();
+
+    }
+
+    const file=
+      input.files[0];
+
+    ffmpeg.FS(
+      "writeFile",
+      file.name,
+      await fetchFile(file)
+    );
+
+    const output=
+      "output."+format;
+
+    await ffmpeg.run(
+      "-i",
+      file.name,
+      output
+    );
+
+    const data=
+      ffmpeg.FS(
+        "readFile",
+        output
+      );
+
+    const blob=
+      new Blob(
+        [data.buffer],
+        {
+          type:"video/"+format
+        }
+      );
+
+    const url=
+      URL.createObjectURL(
+        blob
+      );
+
+    result.innerHTML=`
+
+      <strong>
+        Conversion terminée.
+      </strong>
+
+      <br>
+
+      <a
+        class="download"
+        href="${url}"
+        download="${file.name.split('.')[0]}.${format}"
+      >
+        Télécharger
+      </a>
+
+    `;
+
+  }catch(error){
+
+    console.error(error);
+
+    result.innerHTML=`
+
+      <strong>
+        Erreur pendant la conversion.
+      </strong>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   URL → FICHIER
+========================= */
+
+async function urlToFile(){
+
+  const input=
+    document.getElementById(
+      "urlInput"
+    );
+
+  const result=
+    document.getElementById(
+      "urlResult"
+    );
+
+  const url=
+    input.value.trim();
+
+  if(!url){
+
+    toast(
+      "Entre une adresse internet."
+    );
+
+    return;
+
+  }
+
+  result.innerHTML=`
+
+    <strong>
+      Téléchargement en cours...
+    </strong>
+
+  `;
+
+  result.classList.add(
+    "show"
+  );
+
+  try{
+
+    const response=
+      await fetch(url);
+
+    if(!response.ok){
+
+      throw new Error();
+
+    }
+
+    const blob=
+      await response.blob();
+
+    const filename=
+      url.split("/")
+        .pop()
+        .split("?")[0]
+      ||
+      "fichier";
+
+    const downloadUrl=
+      URL.createObjectURL(
+        blob
+      );
+
+    result.innerHTML=`
+
+      <strong>
+        Fichier prêt.
+      </strong>
+
+      <br>
+
+      <a
+        class="download"
+        href="${downloadUrl}"
+        download="${filename}"
+      >
+        Télécharger
+      </a>
+
+    `;
+
+  }catch(error){
+
+    result.innerHTML=`
+
+      <strong>
+        Impossible de récupérer ce fichier.
+      </strong>
+
+      <p
+        style="color:var(--muted);margin-top:8px"
+      >
+        Certains sites bloquent les téléchargements
+        depuis un navigateur.
+      </p>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   QR CODE
+========================= */
+
+function generateQR(){
+
+  const value=
+    document.getElementById(
+      "qrInput"
+    ).value.trim();
+
+  const result=
+    document.getElementById(
+      "qrResult"
+    );
+
+  const qr=
+    document.getElementById(
+      "qrcode"
+    );
+
+  if(!value){
+
+    toast(
+      "Entre un texte ou un lien."
+    );
+
+    return;
+
+  }
+
+  qr.innerHTML="";
+
+  new QRCode(
+    qr,
+    {
+      text:value,
+      width:220,
+      height:220,
+      colorDark:"#000000",
+      colorLight:"#ffffff"
+    }
+  );
+
+  result.classList.add(
+    "show"
+  );
+
+}
+
+
+function resetQR(){
+
+  document.getElementById(
+    "qrInput"
+  ).value="";
+
+  document.getElementById(
+    "qrcode"
+  ).innerHTML="";
+
+  document.getElementById(
+    "qrResult"
+  ).classList.remove(
+    "show"
+  );
+
+  toast(
+    "QR code supprimé."
+  );
+
+}
+
+
+/* =========================
+   INFORMATIONS FICHIER
+========================= */
+
+function fileInfo(){
+
+  const input=
+    document.getElementById(
+      "infoInput"
+    );
+
+  const result=
+    document.getElementById(
+      "infoResult"
+    );
+
+  if(!input.files.length){
+
+    toast(
+      "Sélectionne un fichier."
+    );
+
+    return;
+
+  }
+
+  const file=
+    input.files[0];
+
+  result.innerHTML=`
+
+    <div class="info">
+
+      <div>
+        <small>Nom</small>
+        <strong>
+          ${file.name}
+        </strong>
+      </div>
+
+      <div>
+        <small>Type</small>
+        <strong>
+          ${file.type || "Inconnu"}
+        </strong>
+      </div>
+
+      <div>
+        <small>Taille</small>
+        <strong>
+          ${(file.size/1024/1024).toFixed(2)}
+          Mo
+        </strong>
+      </div>
+
+      <div>
+        <small>Dernière modification</small>
+        <strong>
+          ${new Date(
+            file.lastModified
+          ).toLocaleString("fr-FR")}
+        </strong>
+      </div>
+
+    </div>
+
+  `;
+
+  result.classList.add(
+    "show"
+  );
+
+}
+
+
+/* =========================
+   APERCU FICHIER
+========================= */
+
+function previewFile(){
+
+  const input=
+    document.getElementById(
+      "previewInput"
+    );
+
+  const result=
+    document.getElementById(
+      "previewResult"
+    );
+
+  if(!input.files.length){
+
+    toast(
+      "Sélectionne un fichier."
+    );
+
+    return;
+
+  }
+
+  const file=
+    input.files[0];
+
+  const url=
+    URL.createObjectURL(
+      file
+    );
+
+  result.innerHTML="";
+
+  if(
+    file.type.startsWith(
+      "image/"
+    )
+  ){
+
+    result.innerHTML=`
+
+      <img src="${url}">
+
+    `;
+
+  }else if(
+    file.type.startsWith(
+      "video/"
+    )
+  ){
+
+    result.innerHTML=`
+
+      <video
+        src="${url}"
+        controls>
+      </video>
+
+    `;
+
+  }else if(
+    file.type.startsWith(
+      "audio/"
+    )
+  ){
+
+    result.innerHTML=`
+
+      <audio
+        src="${url}"
+        controls>
+      </audio>
+
+    `;
+
+  }else if(
+    file.type==="application/pdf"
+  ){
+
+    result.innerHTML=`
+
+      <iframe
+        class="preview-frame"
+        src="${url}">
+      </iframe>
+
+    `;
+
+  }else{
+
+    result.innerHTML=`
+
+      <strong>
+        Aperçu non disponible pour ce format.
+      </strong>
+
+    `;
+
+  }
+
+  result.classList.add(
+    "show"
+  );
+
+}
+
+
+/* =========================
+   FFmpeg
+========================= */
+
+const ffmpegScript=
+  document.createElement(
+    "script"
+  );
+
+ffmpegScript.src=
+  "https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js";
+
+document.head.appendChild(
+  ffmpegScript
+);
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+setTimeout(
+  ()=>{
+    toast(
+      "💻 TOOL-RZL est prêt."
+    );
+  },
+  900
+);
+
+</script>
+
+</body>
+</html>
