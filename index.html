@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faire un don</title>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, #350000 0%, #100000 35%, #050505 75%);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 25px 15px;
+}
+.container {
+    width: 100%;
+    max-width: 850px;
+    margin: auto;
+}
+.simulation {
+    text-align: center;
+    border: 1px solid #777;
+    color: #aaa;
+    padding: 10px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+}
+.header {
+    text-align: center;
+    border: 1px solid #500000;
+    background: rgba(15, 0, 0, 0.95);
+    padding: 35px 20px;
+}
+h1 {
+    color: #ff3030;
+    font-size: clamp(30px, 7vw, 58px);
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+}
+.subtitle {
+    color: #aaa;
+    line-height: 1.6;
+}
+.amount-box {
+    margin-top: 20px;
+    text-align: center;
+    border: 1px solid #650000;
+    background: #0c0000;
+    padding: 30px 15px;
+}
+.amount {
+    font-size: clamp(55px, 13vw, 100px);
+    font-weight: bold;
+}
+.nonnegociable {
+    margin-top: 8px;
+    color: #ff3030;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+/* COMPTE À REBOURS */
+.countdown-box {
+    margin-top: 20px;
+    text-align: center;
+    border: 2px solid #ff2020;
+    background: #160000;
+    padding: 30px 15px;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.18);
+}
+.countdown-label {
+    color: #aaa;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+#countdown {
+    color: #ff3030;
+    font-family: "Courier New", monospace;
+    font-size: clamp(35px, 9vw, 75px);
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+    word-break: break-word;
+}
+.section {
+    margin-top: 20px;
+    border: 1px solid #3d0000;
+    background: rgba(10, 10, 10, 0.95);
+    padding: 25px;
+}
+.section h2 {
+    color: #ff3030;
+    font-size: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+.info {
+    border: 1px solid #292929;
+    background: #101010;
+    padding: 15px;
+}
+.info span {
+    display: block;
+    color: #666;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.info strong {
+    color: #ddd;
+    font-size: 15px;
+}
+.payment {
+    text-align: center;
+    margin-top: 25px;
+}
+.pay-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 280px;
+    padding: 22px 45px;
+    border: 2px solid #ff3030;
+    background: #a00000;
+    color: white;
+    text-decoration: none;
+    font-size: 19px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow:
+        0 0 15px rgba(255, 0, 0, .35),
+        0 0 35px rgba(255, 0, 0, .15);
+    transition: .2s ease;
+}
+.pay-button:hover {
+    background: #d00000;
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 20px rgba(255, 0, 0, .5),
+        0 0 45px rgba(255, 0, 0, .25);
+}
+.pay-button:active {
+    transform: scale(.98);
+}
+.expiration {
+    margin-top: 20px;
+    border: 1px solid #3d0000;
+    background: #0c0000;
+    padding: 22px;
+    color: #999;
+    line-height: 1.7;
+    text-align: center;
+}
+.expiration strong {
+    color: #ff3030;
+}
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #555;
+    font-size: 11px;
+    line-height: 1.6;
+}
+@media (max-width: 600px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    .section {
+        padding: 20px 15px;
+    }
+    #countdown {
+        letter-spacing: 1px;
+    }
+    .pay-button {
+        width: 100%;
+        min-width: 0;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="simulation">
+        QUENTIN DEBOVE
+    </div>
+    <div class="header">
+        <h1>PAIEMENT DE 100€ NON NÉGOCIABLE</h1>
+        <p class="subtitle">
+			D'après l'article 222-17 du Code pénal (Menace de commettre un Viole "Preuve vocal et Video a l'appuie" : 6 mois d'emprisonnement et 7500€ d'amende
+			<p>
+				
+				<p class="subtitle">
+					<br><br>
+            INUTILE de bloquer "LILA" du site "TELEGRAM" si cela est fait le dossier (Preuves de conversations, Videos, Nudes, Phrases choquantes avec une "sois-disant" JEUNE FILLE MINEUR) sera divulgé directement a vos contacts ainsi qu'à la Justice !
+		</p>
+    </div>
+    <div class="amount-box">
+        <div class="amount">100 €</div>
+        <div class="nonnegociable">
+            NON NÉGOCIABLE
+        </div>
+    </div>
+    <!-- COMPTE À REBOURS -->
+    <div class="countdown-box">
+        <div class="countdown-label">
+            Temps restant avant l'envoie du dossier a tout vos contacts
+        </div>
+        <div id="countdown">
+            Chargement...
+        </div>
+    </div>
+	
+	
+	
+	
+	
+	<a href="https://t.me/+SH5vwbgmYUE3YTI8" target="_blank" style="
+    display: inline-block;
+    padding: 14px 28px;
+    background: #ff0000;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    text-align: center;
+">
+    OUVRIR DOSSIER
+</a>
+
+
+
+	
+	
+	
+	
+	
+	
+    <!-- INFORMATIONS -->
+    <div class="section">
+        <h2>INFORMATIONS</h2>
+        <div class="info-grid">
+            <div class="info">
+                <span>NOM</span>
+                <strong>Debove</strong>
+            </div>
+            <div class="info">
+                <span>PRÉNOM</span>
+                <strong>Quentin</strong>
+            </div>
+			<div class="info">
+                <span>PÈRE</span>
+                <strong>Minerbe</strong>
+            </div>
+			<div class="info">
+                <span>MERE</span>
+                <strong>Nathalie</strong>
+            </div>
+			<div class="info">
+                <span>Suppléments</span>
+                <strong>Antoine Debove, Benoît Debove, Oceane, Laura et +88 autres contacts.</strong>
+            </div>
+            <div class="info">
+                <span>DATE DE NAISSANCE, ÂGE</span>
+                <strong>17 déc. 1990 ( 35 ans )</strong>
+            </div>
+			<div class="info">
+                <span>ANCIEN DOMICILE</span>
+                <strong>5 Rue Fosse Bourguinoise Appartement 2 Neuville sous-Montreuil</strong>
+            </div>
+			<div class="info">
+                <span>DOMICILE ACTIF</span>
+                <strong>Bâtiment 8 Rue maxence Van der Meersch, Roubaix, Wasquehal</strong>
+            </div>
+			<div class="info">
+                <span>CODE POSTAL</span>
+                <strong>83150 Bandol</strong>
+            </div>
+			<div class="info">
+                <span>VILLE</span>
+                <strong>Lille</strong>
+            </div>
+			<div class="info">
+                <span>PAYS</span>
+                <strong>France</strong>
+            </div>
+			
+			
+            <div class="info">
+                <span>NUMÉRO</span>
+                <strong>+33 6 56 78 41 33</strong>
+            </div>
+        </div>
+    </div>
+    <!-- BOUTON PAYPAL -->
+    <div class="payment">
+        <a
+            class="pay-button"
+            href="https://paypal.me/NazoxDiscord/100"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            PROCÉDER AU PAIEMENT DE 100 €
+        </a>
+    </div>
+    <div class="expiration">
+        Vous serez redirigé vers PayPal afin
+        d'effectuer votre paiement.
+        <br><br>
+        Si le paiement n'est pas effectué avant la fin du temps imparti le dossier de "QUENTIN DEBOVE" sera envoyé a Nathalie Debove, Benoît Debove, Oceane, Morgan, Laura et 99+ autres Contacts... 
+		
+		
+		<br><br>
+		Une fois le PAIEMENT reçu le dossier sera automatiquement supprimer ainsi que toutes informations de ses contacts,   
+	
+	
+	
+	</div>
+    <div class="footer">
+        QUENTIN DEBOVE
+    </div>
+</div>
+
+<script>
+/* ================================
+   COMPTE À REBOURS
+   Fin : 28 septembre 2026 à 00:00
+================================ */
+const endTime =
+    new Date("2026-10-31T00:00:00").getTime();
+const countdown =
+    document.getElementById("countdown");
+function updateCountdown() {
+    const remaining =
+        Math.max(0, endTime - Date.now());
+    const days =
+        Math.floor(remaining / 86400000);
+    const hours =
+        Math.floor(
+            (remaining % 86400000) / 3600000
+        );
+    const minutes =
+        Math.floor(
+            (remaining % 3600000) / 60000
+        );
+    const seconds =
+        Math.floor(
+            (remaining % 60000) / 1000
+        );
+    countdown.textContent =
+        `${days}j ` +
+        `${String(hours).padStart(2, "0")}h ` +
+        `${String(minutes).padStart(2, "0")}m ` +
+        `${String(seconds).padStart(2, "0")}s`;
+    if (remaining <= 0) {
+        clearInterval(timer);
+        countdown.textContent = "TERMINÉ";
+        countdown.style.color = "#888";
+        countdown.style.textShadow = "none";
+    }
+}
+updateCountdown();
+const timer =
+    setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>
